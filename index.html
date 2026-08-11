@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SHSAT Practice — Mathematics (Form D)</title>
+<style>
+:root{
+  --ink:#16202e; --ink-soft:#5a6579; --ink-faint:#8b94a5;
+  --rule:#dde3ec; --canvas:#eef1f6; --card:#fff;
+  --accent:#1f5aa8; --accent-soft:#e9f0fa; --accent-deep:#16416f;
+  --amber:#8a6114; --amber-bg:#fdf3dd; --amber-line:#e7cf9a;
+  --danger:#b42318; --ok:#15803d;
+  --ui:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--canvas);color:var(--ink);font-family:var(--ui);
+     font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+
+/* ---------- top bar ---------- */
+.bar{position:sticky;top:0;z-index:20;background:var(--ink);color:#fff}
+.bar-in{max-width:1000px;margin:0 auto;padding:12px 24px;display:flex;
+        align-items:center;justify-content:space-between;gap:14px}
+.brand{font-size:14px;font-weight:600;letter-spacing:.02em}
+.brand span{color:#93a3bb;font-weight:500}
+.arrow{width:62px;height:62px;border-radius:50%;border:none;background:var(--accent);
+     color:#fff;font-size:28px;line-height:1;cursor:pointer;display:flex;
+     align-items:center;justify-content:center;transition:background .12s,transform .12s}
+.arrow:hover{background:var(--accent-deep);transform:translateX(2px)}
+.arrow.finish{background:var(--ok)}
+.arrow.finish:hover{background:#136c34;transform:none}
+.arrow:focus-visible{outline:3px solid #9dc3ec;outline-offset:3px}
+.count{font-size:14px;color:#c2ccdb;font-variant-numeric:tabular-nums}
+.track{height:3px;background:#0d1725}
+.track i{display:block;height:100%;background:#5b9bd8;transition:width .25s ease}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--rule);border-radius:10px;
+      padding:34px 42px;margin:28px 0}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.qnum{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+      color:var(--ink-faint)}
+.badge{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+       color:var(--amber);background:var(--amber-bg);border:1px solid var(--amber-line);
+       padding:2px 8px;border-radius:4px}
+h1{font-size:29px;line-height:1.25;margin:0 0 15px}
+h2{font-size:15px;font-weight:700;margin:26px 0 10px;letter-spacing:.01em}
+.lede{color:var(--ink-soft);margin:0 0 20px}
+
+/* ---------- question body ---------- */
+.stem{font-size:19px;line-height:1.6}
+.stem p{margin:0 0 12px}
+.stem ul{margin:10px 0 12px;padding-left:22px}
+.stem li{margin-bottom:5px}
+.disp{text-align:center;margin:18px 0;font-size:19px}
+.fig{text-align:center;margin:16px 0}
+.fig svg{max-width:100%;height:auto}
+.frac{display:inline-block;vertical-align:middle;text-align:center;
+      font-size:.92em;line-height:1.15;margin:0 2px}
+.frac .num{display:block;padding:0 3px}
+.frac .den{display:block;border-top:1px solid currentColor;padding:0 3px}
+.ovl{border-top:1px solid currentColor}
+sup{font-size:.72em;vertical-align:super;line-height:0}
+.tbl-title{text-align:center;font-size:15.5px;margin-bottom:7px}
+table.data{border-collapse:collapse;margin:0 auto 14px}
+table.data th,table.data td{border:1px solid var(--ink);padding:6px 14px;
+      font-size:15.5px;text-align:center}
+table.spin{border-collapse:collapse;margin:0 auto}
+table.spin td{text-align:center;padding:0 6px}
+table.spin td.spl{font-size:13px;padding-bottom:4px}
+
+/* ---------- choices ---------- */
+.choices{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.choice{display:flex;align-items:flex-start;gap:13px;width:100%;text-align:left;
+        background:#fff;border:1.5px solid var(--rule);border-radius:8px;
+        padding:15px 18px;cursor:pointer;font-size:18.5px;line-height:1.55;color:var(--ink);
+        transition:border-color .12s,background .12s}
+.choice:hover{border-color:#b9c4d4;background:#fafbfd}
+.choice .ltr{flex:none;width:29px;height:29px;border-radius:50%;border:1.5px solid #c3ccd9;
+        display:flex;align-items:center;justify-content:center;font-size:14px;
+        font-weight:700;color:var(--ink-soft);margin-top:1px}
+.choice.on{border-color:var(--accent);background:var(--accent-soft)}
+.choice.on .ltr{background:var(--accent);border-color:var(--accent);color:#fff}
+.choice:focus-visible{outline:3px solid #9dc3ec;outline-offset:2px}
+.choice svg{max-width:100%;height:auto}
+
+/* ---------- grid-in ---------- */
+.grid-in{margin-top:22px}
+.grid-in label{display:block;font-size:13px;font-weight:600;color:var(--ink-soft);
+       margin-bottom:8px}
+.grid-in input{width:240px;font-size:25px;font-family:var(--ui);font-weight:600;
+       padding:14px 16px;border:1.5px solid #c3ccd9;border-radius:8px;
+       text-align:center;letter-spacing:.04em}
+.grid-in input:focus{outline:none;border-color:var(--accent);
+       box-shadow:0 0 0 3px var(--accent-soft)}
+.hint{font-size:13px;color:var(--ink-faint);margin-top:9px}
+
+/* ---------- action bar ---------- */
+.actions{display:flex;align-items:center;justify-content:space-between;gap:14px;
+      margin-top:28px;padding-top:20px;border-top:1px solid var(--rule)}
+.note{font-size:13.5px;color:var(--ink-faint);max-width:400px}
+.btns{display:flex;align-items:center;gap:10px}
+.btn{border:none;border-radius:8px;padding:13px 26px;font-size:16px;font-weight:600;
+     cursor:pointer;transition:background .12s,opacity .12s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-deep)}
+.btn-primary:disabled{background:#c2ccd9;cursor:not-allowed}
+.btn-done{background:var(--ok);color:#fff}
+.btn-done:hover{background:#136c34}
+.btn-ghost{background:none;color:var(--ink-soft);border:1.5px solid var(--rule);
+     padding:11px 18px}
+.btn-ghost:hover{background:#f3f5f9;color:var(--ink)}
+.btn:focus-visible{outline:3px solid #9dc3ec;outline-offset:2px}
+
+/* ---------- start / results ---------- */
+.rules{list-style:none;padding:0;margin:0 0 6px}
+.rules li{display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--rule);
+      font-size:16px;color:var(--ink-soft)}
+.rules li:last-child{border-bottom:none}
+.rules b{color:var(--ink);font-weight:650;flex:none;width:146px}
+.stats{display:flex;gap:34px;margin:6px 0 22px;flex-wrap:wrap}
+.stat .k{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-faint)}
+.stat .v{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+table.sheet{width:100%;border-collapse:collapse;margin-top:6px}
+table.sheet th{text-align:left;font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;
+      color:var(--ink-faint);border-bottom:1.5px solid var(--rule);padding:8px 10px}
+table.sheet td{border-bottom:1px solid #eef1f6;padding:9px 11px;font-size:16px;
+      font-variant-numeric:tabular-nums}
+table.sheet td.q{color:var(--ink-faint);width:64px}
+table.sheet td.you{font-weight:650}
+.blank{color:var(--danger);font-weight:650}
+.right{color:var(--ok);font-weight:650}
+.wrong{color:var(--danger);font-weight:650}
+.sheetgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 26px}
+@media(max-width:700px){.sheetgrid{grid-template-columns:1fr}}
+
+/* ---------- misc ---------- */
+.rev-head{display:flex;align-items:center;justify-content:space-between;gap:12px;
+      flex-wrap:wrap;margin-bottom:4px}
+.verdict{font-size:14px;font-weight:650}
+.correct-note{margin-top:20px;padding:13px 16px;border-radius:8px;background:#f2f8f4;
+      border:1px solid #cfe6d8;font-size:15px}
+.correct-note b{color:var(--ok)}
+@media(max-width:640px){
+  .card{padding:22px 18px;border-radius:8px}
+  .bar-in{padding:9px 14px}.wrap{padding:0 12px}
+  h1{font-size:22px}.stem,.choice{font-size:16.5px}
+  .arrow{width:54px;height:54px;font-size:25px}
+  .actions{flex-direction:column;align-items:stretch}
+  .btns{justify-content:space-between}.note{max-width:none}
+}
+/* in-page dialog (native confirm() is blocked in embedded previews) */
+.modal{position:fixed;inset:0;z-index:60;background:rgba(16,24,38,.55);
+      display:flex;align-items:center;justify-content:center;padding:20px}
+.modal[hidden]{display:none}
+.modal-card{background:#fff;border-radius:12px;padding:26px 28px;max-width:420px;width:100%;
+      box-shadow:0 18px 50px rgba(10,18,32,.3)}
+.modal-card h3{margin:0 0 8px;font-size:18px}
+.modal-card p{margin:0 0 20px;color:var(--ink-soft);font-size:15px}
+.modal-btns{display:flex;justify-content:flex-end;gap:10px}
+
+/* answer-sheet header: screen + paper */
+.printhead{border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:18px}
+.ph-title{font-size:15px;font-weight:700;letter-spacing:.01em}
+.ph-meta{font-size:13px;color:var(--ink-soft);margin-top:3px}
+.namefield{display:flex;align-items:center;gap:10px;margin:0 0 18px}
+.namefield label{font-size:13px;font-weight:600;color:var(--ink-soft)}
+.namefield input{flex:1;max-width:280px;font-family:var(--ui);font-size:15px;padding:8px 12px;
+      border:1.5px solid #c3ccd9;border-radius:8px}
+.namefield input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.tip{font-size:12.5px;color:var(--ink-faint);margin-top:12px}
+
+@media print{
+  @page{margin:14mm}
+  .bar,.track,.actions,.noprint,.modal,.namefield{display:none!important}
+  body{background:#fff;font-size:12px}
+  .stem{font-size:12px}.choice{font-size:12px}
+  .wrap{max-width:none;padding:0}
+  .card{border:none;margin:0;padding:0;border-radius:0}
+  h1{font-size:18px;margin-bottom:6px}
+  h2{font-size:13px;margin:14px 0 6px}
+  .stats{gap:26px;margin:4px 0 12px}
+  .stat .v{font-size:19px}
+  .sheetgrid{gap:0 18px}
+  table.sheet td,table.sheet th{padding:2.5px 7px;font-size:11px}
+  tr{page-break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="bar" id="bar" hidden>
+  <div class="bar-in">
+    <div class="brand">SHSAT Practice <span>&middot; Mathematics &middot; Form D</span></div>
+      <div class="count" id="count">0 of 57 answered</div>
+  </div>
+</header>
+<div class="track" id="track" hidden><i id="trackbar" style="width:0%"></i></div>
+<main class="wrap" id="app"></main>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modal-h">
+  <div class="modal-card">
+    <h3 id="modal-h">Are you sure?</h3>
+    <p id="modal-p"></p>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" id="modal-no">Cancel</button>
+      <button class="btn btn-primary" id="modal-yes">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+var DATA = [{"n": 58, "type": "grid", "stem": "<p>Mr. Okonkwo opened a certificate of deposit with $4,000. The account earns\n4&#37; simple interest annually and he makes no additional deposits. After how many years\nwill the balance of the account be $5,600?</p>", "choices": [], "answer": "10"}, {"n": 59, "type": "grid", "stem": "<div class=\"disp\">10 &minus; 18 &divide; |&minus;6| + (&minus;3)<sup>3</sup>\n&times; <span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">3</span></span></div><p>What is the value of the expression shown above?</p>", "choices": [], "answer": "-11"}, {"n": 60, "type": "grid", "stem": "<div class=\"disp\">5(2<i>x</i> &minus; 3) &minus; 3(<i>x</i> + 4) = 2<i>x</i> &minus; 7</div>\n<p>Solve for <i>x</i>.</p>", "choices": [], "answer": "4"}, {"n": 61, "type": "grid", "stem": "<div class=\"fig\"><svg width=\"329\" height=\"274\" viewBox=\"0 0 270 225\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"16.0\" y1=\"88.0\" x2=\"250.0\" y2=\"88.0\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"16.0,88.0 23.0,84.5 23.0,91.5\" fill=\"#000\"/><polygon points=\"250.0,88.0 243.0,84.5 243.0,91.5\" fill=\"#000\"/><text x=\"258.0\" y=\"92.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\" font-style=\"italic\">n</text><line x1=\"112\" y1=\"24\" x2=\"112\" y2=\"208\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"112,18 108,28 116,28\" fill=\"#000\"/><polygon points=\"112,214 108,204 116,204\" fill=\"#000\"/><text x=\"102.0\" y=\"24.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\" font-style=\"italic\">l</text><path d=\"M 98 88 L 98 74 L 112 74\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><line x1=\"83.1\" y1=\"202.5\" x2=\"208.4\" y2=\"53.1\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"208.4,53.1 205.7,60.6 201.5,57.1\" fill=\"#000\"/><line x1=\"137.7\" y1=\"137.4\" x2=\"72.1\" y2=\"215.5\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"72.1,215.5 74.9,208.0 79.1,211.5\" fill=\"#000\"/><text x=\"226.8\" y=\"49.4\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\" font-style=\"italic\">m</text><path d=\"M 137.7 137.4 A 40.0 40.0 0 0 0 112.0 128.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"130.5\" y=\"114.6\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"start\">40&deg;</text><circle cx=\"179.1\" cy=\"88.0\" r=\"2.6\" fill=\"#000\"/><path d=\"M 195.8 68.1 A 26.0 26.0 0 0 0 153.1 88.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"162.2\" y=\"54.7\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\" font-style=\"italic\">x&deg;</text></svg></div><p>In the figure above, line <i>l</i> is perpendicular to line <i>n</i>.\nWhat is the value of <i>x</i>?</p>", "choices": [], "answer": "130"}, {"n": 62, "type": "grid", "stem": "<p>The mean value of 12 numbers is 23. Four of these numbers (12, 19, 22, and 31)\nare discarded. What is the mean of the 8 remaining numbers?</p>", "choices": [], "answer": "24"}, {"n": 63, "type": "mc", "stem": "<div class=\"disp\">2<sup>5</sup> + 5<sup>3</sup> &minus; 3<sup>4</sup> =</div>", "choices": [{"letter": "A", "html": "13"}, {"letter": "B", "html": "76"}, {"letter": "C", "html": "145"}, {"letter": "D", "html": "157"}], "answer": "B"}, {"n": 64, "type": "mc", "stem": "<p>Nadia&rsquo;s water jug held 2&thinsp;<span class=\"frac\"><span class=\"num\">5</span><span class=\"den\">6</span></span> liters of water on Monday. On Tuesday she added 1&thinsp;<span class=\"frac\"><span class=\"num\">3</span><span class=\"den\">4</span></span>\nliters, and on Wednesday she poured out <span class=\"frac\"><span class=\"num\">5</span><span class=\"den\">8</span></span> liter. How many liters of water were in the jug\nafter Wednesday?</p>", "choices": [{"letter": "E", "html": "3&thinsp;<span class=\"frac\"><span class=\"num\">23</span><span class=\"den\">24</span></span>"}, {"letter": "F", "html": "4&thinsp;<span class=\"frac\"><span class=\"num\">5</span><span class=\"den\">24</span></span>"}, {"letter": "G", "html": "4&thinsp;<span class=\"frac\"><span class=\"num\">23</span><span class=\"den\">24</span></span>"}, {"letter": "H", "html": "5&thinsp;<span class=\"frac\"><span class=\"num\">5</span><span class=\"den\">24</span></span>"}], "answer": "E"}, {"n": 65, "type": "mc", "stem": "<p>Priyanka is paid $22 per hour plus a 12&#37; commission on all appliances she\nsells. Last week Priyanka worked 35 hours and was paid a total of $1,046. What was the total\nvalue of the appliances she sold?</p>", "choices": [{"letter": "A", "html": "$276.00"}, {"letter": "B", "html": "$2,300.00"}, {"letter": "C", "html": "$3,312.00"}, {"letter": "D", "html": "$8,716.67"}], "answer": "B"}, {"n": 66, "type": "mc", "stem": "<p>A rotating display in a museum lobby makes 1 complete revolution every\n75 minutes. If the display starts moving at 9:45 a.m., at what time will it complete its\n12th revolution?</p>", "choices": [{"letter": "E", "html": "10:45 p.m."}, {"letter": "F", "html": "12:45 a.m."}, {"letter": "G", "html": "12:45 p.m."}, {"letter": "H", "html": "1:45 a.m."}], "answer": "F"}, {"n": 67, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"354\" height=\"76\" viewBox=\"0 0 290 62\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"6.0\" y1=\"34.0\" x2=\"284.0\" y2=\"34.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"6.0,34.0 13.0,30.5 13.0,37.5\" fill=\"#000\"/><polygon points=\"284.0,34.0 277.0,30.5 277.0,37.5\" fill=\"#000\"/><line x1=\"20.0\" y1=\"29.0\" x2=\"20.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"20.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">&minus;4</text><line x1=\"45.0\" y1=\"29.0\" x2=\"45.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"45.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">&minus;3</text><line x1=\"70.0\" y1=\"29.0\" x2=\"70.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"70.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">&minus;2</text><line x1=\"95.0\" y1=\"29.0\" x2=\"95.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"95.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">&minus;1</text><line x1=\"120.0\" y1=\"29.0\" x2=\"120.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"120.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">0</text><line x1=\"145.0\" y1=\"29.0\" x2=\"145.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"145.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">1</text><line x1=\"170.0\" y1=\"29.0\" x2=\"170.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"170.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">2</text><line x1=\"195.0\" y1=\"29.0\" x2=\"195.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"195.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">3</text><line x1=\"220.0\" y1=\"29.0\" x2=\"220.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"220.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">4</text><line x1=\"245.0\" y1=\"29.0\" x2=\"245.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"245.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">5</text><line x1=\"270.0\" y1=\"29.0\" x2=\"270.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"270.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">6</text><circle cx=\"45.0\" cy=\"34.0\" r=\"3.2\" fill=\"#000\"/><text x=\"45.0\" y=\"24.0\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">R</text><circle cx=\"145.0\" cy=\"34.0\" r=\"3.2\" fill=\"#000\"/><text x=\"145.0\" y=\"24.0\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">S</text></svg></div><p>Points T and U are not shown on the number line above. If S is the midpoint of\n<span class=\"ovl\">RT</span>, and T is the midpoint of <span class=\"ovl\">RU</span>, where on\nthe number line would point U be located?</p>", "choices": [{"letter": "A", "html": "9"}, {"letter": "B", "html": "11"}, {"letter": "C", "html": "13"}, {"letter": "D", "html": "17"}], "answer": "C"}, {"n": 68, "type": "mc", "stem": "<p>A community center has two 40-member clubs. The director recorded the ages of\nthe members of each club in the box plots below.</p>\n<div class=\"fig\"><svg width=\"366\" height=\"142\" viewBox=\"0 0 300 116\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"170.0\" y=\"11.0\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">AGES OF CLUB MEMBERS</text><text x=\"8.0\" y=\"34.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"start\">Club P</text><line x1=\"105.2\" y1=\"30.0\" x2=\"134.0\" y2=\"30.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"206.0\" y1=\"30.0\" x2=\"263.6\" y2=\"30.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"105.2\" y1=\"23.0\" x2=\"105.2\" y2=\"37.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"263.6\" y1=\"23.0\" x2=\"263.6\" y2=\"37.0\" stroke=\"#000\" stroke-width=\"1.1\"/><rect x=\"134.0\" y=\"20.0\" width=\"72.0\" height=\"20.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"162.8\" y1=\"20.0\" x2=\"162.8\" y2=\"40.0\" stroke=\"#000\" stroke-width=\"1.1\"/><text x=\"8.0\" y=\"70.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"start\">Club Q</text><line x1=\"76.4\" y1=\"66.0\" x2=\"119.6\" y2=\"66.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"191.6\" y1=\"66.0\" x2=\"234.8\" y2=\"66.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"76.4\" y1=\"59.0\" x2=\"76.4\" y2=\"73.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"234.8\" y1=\"59.0\" x2=\"234.8\" y2=\"73.0\" stroke=\"#000\" stroke-width=\"1.1\"/><rect x=\"119.6\" y=\"56.0\" width=\"72.0\" height=\"20.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"162.8\" y1=\"56.0\" x2=\"162.8\" y2=\"76.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"6.0\" y1=\"88.0\" x2=\"294.0\" y2=\"88.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"6.0,88.0 13.0,84.5 13.0,91.5\" fill=\"#000\"/><polygon points=\"294.0,88.0 287.0,84.5 287.0,91.5\" fill=\"#000\"/><line x1=\"62.0\" y1=\"83.0\" x2=\"62.0\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"62.0\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">12</text><line x1=\"76.4\" y1=\"83.0\" x2=\"76.4\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"90.8\" y1=\"83.0\" x2=\"90.8\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"90.8\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">16</text><line x1=\"105.2\" y1=\"83.0\" x2=\"105.2\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"119.6\" y1=\"83.0\" x2=\"119.6\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"119.6\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">20</text><line x1=\"134.0\" y1=\"83.0\" x2=\"134.0\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"148.4\" y1=\"83.0\" x2=\"148.4\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"148.4\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">24</text><line x1=\"162.8\" y1=\"83.0\" x2=\"162.8\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"177.2\" y1=\"83.0\" x2=\"177.2\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"177.2\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">28</text><line x1=\"191.6\" y1=\"83.0\" x2=\"191.6\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"206.0\" y1=\"83.0\" x2=\"206.0\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"206.0\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">32</text><line x1=\"220.4\" y1=\"83.0\" x2=\"220.4\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"234.8\" y1=\"83.0\" x2=\"234.8\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"234.8\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">36</text><line x1=\"249.2\" y1=\"83.0\" x2=\"249.2\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"263.6\" y1=\"83.0\" x2=\"263.6\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"263.6\" y=\"104.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">40</text><line x1=\"278.0\" y1=\"83.0\" x2=\"278.0\" y2=\"93.0\" stroke=\"#000\" stroke-width=\"1\"/></svg></div>\n<p>Which statement about the two clubs can be verified based on the box plots?</p>", "choices": [{"letter": "E", "html": "Club P has more members who are at least 18 years old than Club Q has."}, {"letter": "F", "html": "Both clubs have at least one member who is exactly 26 years old."}, {"letter": "G", "html": "Both clubs have the same number of members who are between 22 and 26 years old."}, {"letter": "H", "html": "Club Q has more members who are older than 30 than Club P has."}], "answer": "E"}, {"n": 69, "type": "mc", "stem": "<p>If <i>n</i> is an integer and 5<i>n</i> + 2 is an odd number, which expression\n<b>must</b> also represent an even number?</p>", "choices": [{"letter": "A", "html": "2<i>n</i> + 3"}, {"letter": "B", "html": "3<i>n</i> + 3"}, {"letter": "C", "html": "4<i>n</i> + 1"}, {"letter": "D", "html": "<i>n</i> + 4"}], "answer": "B"}, {"n": 70, "type": "mc", "stem": "<p>The product of two positive integers is 84. Which number could be the sum of the\ntwo integers?</p>", "choices": [{"letter": "E", "html": "20"}, {"letter": "F", "html": "22"}, {"letter": "G", "html": "24"}, {"letter": "H", "html": "30"}], "answer": "E"}, {"n": 71, "type": "mc", "stem": "<p>If <i>n</i> is an even integer that is greater than &minus;7.4, what is the\n<b>least</b> possible value of <i>n</i>?</p>", "choices": [{"letter": "A", "html": "&minus;8"}, {"letter": "B", "html": "&minus;7"}, {"letter": "C", "html": "&minus;6"}, {"letter": "D", "html": "&minus;4"}], "answer": "C"}, {"n": 72, "type": "mc", "stem": "<p>A robotics club advisor used the box plot below to display the distribution of\nthe ages of the 24 students who joined the club.</p>\n<div class=\"fig\"><svg width=\"354\" height=\"122\" viewBox=\"0 0 290 100\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"144.0\" y=\"12.0\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">ROBOTICS CLUB AGES</text><line x1=\"47.5\" y1=\"33.0\" x2=\"111.8\" y2=\"33.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"176.2\" y1=\"33.0\" x2=\"240.5\" y2=\"33.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"47.5\" y1=\"25.0\" x2=\"47.5\" y2=\"41.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"240.5\" y1=\"25.0\" x2=\"240.5\" y2=\"41.0\" stroke=\"#000\" stroke-width=\"1.1\"/><rect x=\"111.8\" y=\"22.0\" width=\"64.4\" height=\"22.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"133.3\" y1=\"22.0\" x2=\"133.3\" y2=\"44.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"6.0\" y1=\"66.0\" x2=\"284.0\" y2=\"66.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"6.0,66.0 13.0,62.5 13.0,69.5\" fill=\"#000\"/><polygon points=\"284.0,66.0 277.0,62.5 277.0,69.5\" fill=\"#000\"/><line x1=\"26.0\" y1=\"61.0\" x2=\"26.0\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"26.0\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">4</text><line x1=\"47.5\" y1=\"61.0\" x2=\"47.5\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"47.5\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">5</text><line x1=\"68.9\" y1=\"61.0\" x2=\"68.9\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"68.9\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">6</text><line x1=\"90.4\" y1=\"61.0\" x2=\"90.4\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"90.4\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">7</text><line x1=\"111.8\" y1=\"61.0\" x2=\"111.8\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"111.8\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">8</text><line x1=\"133.3\" y1=\"61.0\" x2=\"133.3\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"133.3\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">9</text><line x1=\"154.7\" y1=\"61.0\" x2=\"154.7\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"154.7\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">10</text><line x1=\"176.2\" y1=\"61.0\" x2=\"176.2\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"176.2\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">11</text><line x1=\"197.6\" y1=\"61.0\" x2=\"197.6\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"197.6\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">12</text><line x1=\"219.1\" y1=\"61.0\" x2=\"219.1\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"219.1\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">13</text><line x1=\"240.5\" y1=\"61.0\" x2=\"240.5\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"240.5\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">14</text><line x1=\"262.0\" y1=\"61.0\" x2=\"262.0\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"262.0\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">15</text></svg></div>\n<p>Which statement about the distribution of ages is true?</p>", "choices": [{"letter": "E", "html": "Approximately half of the students are at least 11 years old."}, {"letter": "F", "html": "The median age is equal to the mean age."}, {"letter": "G", "html": "Approximately 75&#37; of the students are younger than 8 years old."}, {"letter": "H", "html": "The range of the data is 3 times the interquartile range."}], "answer": "H"}, {"n": 73, "type": "mc", "stem": "<p>Between which two consecutive integers is the fraction &minus;<span class=\"frac\"><span class=\"num\">47</span><span class=\"den\">6</span></span>?</p>", "choices": [{"letter": "A", "html": "&minus;8 and &minus;7"}, {"letter": "B", "html": "&minus;7 and &minus;6"}, {"letter": "C", "html": "&minus;6 and &minus;5"}, {"letter": "D", "html": "7 and 8"}], "answer": "A"}, {"n": 74, "type": "mc", "stem": "<p>A customer wants to buy a pair of headphones.</p>\n<ul><li>The original price of the headphones is $120.00.</li>\n<li>The store is offering a 20&#37; discount on all headphones.</li>\n<li>The customer has a coupon for an additional 15&#37; off the sale price.</li>\n<li>The tax rate is 8&#37;.</li></ul>\n<p>What is the final cost of the headphones, including the tax, to the nearest cent?</p>", "choices": [{"letter": "E", "html": "$81.60"}, {"letter": "F", "html": "$84.24"}, {"letter": "G", "html": "$88.13"}, {"letter": "H", "html": "$96.00"}], "answer": "G"}, {"n": 75, "type": "mc", "stem": "<p>Devon is saving money for a laptop. He starts with a balance of $150.00 and\nsaves 18&#37; of his earnings each week. He earns the same amount each week. After 15 weeks,\nDevon has a total of $1,014.00. How much money does Devon earn each week?</p>", "choices": [{"letter": "A", "html": "$57.60"}, {"letter": "B", "html": "$67.60"}, {"letter": "C", "html": "$320.00"}, {"letter": "D", "html": "$375.56"}], "answer": "C"}, {"n": 76, "type": "mc", "stem": "<p>A bike-share manager recorded the number of rides taken from one station each\nday for a month. The box plot displays the data.</p>\n<div class=\"fig\"><svg width=\"354\" height=\"137\" viewBox=\"0 0 290 112\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"144.0\" y=\"12.0\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">DAILY RIDES</text><line x1=\"58.2\" y1=\"33.0\" x2=\"111.8\" y2=\"33.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"154.7\" y1=\"33.0\" x2=\"251.3\" y2=\"33.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"58.2\" y1=\"25.0\" x2=\"58.2\" y2=\"41.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"251.3\" y1=\"25.0\" x2=\"251.3\" y2=\"41.0\" stroke=\"#000\" stroke-width=\"1.1\"/><rect x=\"111.8\" y=\"22.0\" width=\"42.9\" height=\"22.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"133.3\" y1=\"22.0\" x2=\"133.3\" y2=\"44.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"6.0\" y1=\"66.0\" x2=\"284.0\" y2=\"66.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"6.0,66.0 13.0,62.5 13.0,69.5\" fill=\"#000\"/><polygon points=\"284.0,66.0 277.0,62.5 277.0,69.5\" fill=\"#000\"/><line x1=\"26.0\" y1=\"61.0\" x2=\"26.0\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"26.0\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">0</text><line x1=\"47.5\" y1=\"61.0\" x2=\"47.5\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"47.5\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">4</text><line x1=\"68.9\" y1=\"61.0\" x2=\"68.9\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"68.9\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">8</text><line x1=\"90.4\" y1=\"61.0\" x2=\"90.4\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"90.4\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">12</text><line x1=\"111.8\" y1=\"61.0\" x2=\"111.8\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"111.8\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">16</text><line x1=\"133.3\" y1=\"61.0\" x2=\"133.3\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"133.3\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">20</text><line x1=\"154.7\" y1=\"61.0\" x2=\"154.7\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"154.7\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">24</text><line x1=\"176.2\" y1=\"61.0\" x2=\"176.2\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"176.2\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">28</text><line x1=\"197.6\" y1=\"61.0\" x2=\"197.6\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"197.6\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">32</text><line x1=\"219.1\" y1=\"61.0\" x2=\"219.1\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"219.1\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">36</text><line x1=\"240.5\" y1=\"61.0\" x2=\"240.5\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"240.5\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">40</text><line x1=\"262.0\" y1=\"61.0\" x2=\"262.0\" y2=\"71.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"262.0\" y=\"82.0\" font-family=\"Helvetica\" font-size=\"8\" text-anchor=\"middle\">44</text><text x=\"144.0\" y=\"95.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">Number of Rides</text></svg></div>\n<p>A value in a data set is an <b>outlier</b> if it is more than 1.5 times the interquartile\nrange above the third quartile or more than 1.5 times the interquartile range below the first\nquartile. Based on the box plot, which statement is correct?</p>", "choices": [{"letter": "E", "html": "The minimum, 6, is an outlier."}, {"letter": "F", "html": "The data set contains no outliers."}, {"letter": "G", "html": "The minimum and the maximum are both outliers."}, {"letter": "H", "html": "The maximum, 42, is an outlier."}], "answer": "H"}, {"n": 77, "type": "mc", "stem": "<div class=\"disp\"><span class=\"frac\"><span class=\"num\">4<sup>2</sup> + (&minus;5)<sup>2</sup> + (&minus;3)<sup>2</sup></span><span class=\"den\">(4 &minus; 5 &minus; 3)<sup>2</sup></span></span> =</div>", "choices": [{"letter": "A", "html": "&minus;<span class=\"frac\"><span class=\"num\">25</span><span class=\"den\">8</span></span>"}, {"letter": "B", "html": "<span class=\"frac\"><span class=\"num\">25</span><span class=\"den\">8</span></span>"}, {"letter": "C", "html": "<span class=\"frac\"><span class=\"num\">25</span><span class=\"den\">2</span></span>"}, {"letter": "D", "html": "50"}], "answer": "B"}, {"n": 78, "type": "mc", "stem": "<p>A band director purchased 24 identical music stands and spent a total of\n$1,036.80, including tax. If the tax rate is 8&#37;, what was the price of each music stand\nbefore tax?</p>", "choices": [{"letter": "E", "html": "$36.00"}, {"letter": "F", "html": "$40.00"}, {"letter": "G", "html": "$43.20"}, {"letter": "H", "html": "$46.66"}], "answer": "F"}, {"n": 79, "type": "mc", "stem": "<p>The numbers <i>m</i>, <i>n</i>, <i>p</i>, and <i>q</i> are different, and each is\nequal to one of the numbers 1, 2, 3, 4, 6, 12, or 24. If\n3<i>m</i> = 12<i>q</i> = <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">2</span></span><i>n</i> = <i>p</i>, what is the value of <i>n</i>?</p>", "choices": [{"letter": "A", "html": "4"}, {"letter": "B", "html": "12"}, {"letter": "C", "html": "24"}, {"letter": "D", "html": "36"}], "answer": "C"}, {"n": 80, "type": "mc", "stem": "<div class=\"disp\">{0.2, 0.02, 0.002, 0.0002, 0.00002, 0.000002}</div>\n<p>If a person chooses a number at random from the set above, what is the probability that the\nnumber is greater than 0.0015?</p>", "choices": [{"letter": "E", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">3</span></span>"}, {"letter": "F", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">2</span></span>"}, {"letter": "G", "html": "<span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">3</span></span>"}, {"letter": "H", "html": "<span class=\"frac\"><span class=\"num\">5</span><span class=\"den\">6</span></span>"}], "answer": "F"}, {"n": 81, "type": "mc", "stem": "<p>A student uses Spinner M and Spinner N to generate a list of two-digit numbers.\nEach section of each spinner is the same size.</p>\n<table class=\"spin\"><tr><td><svg width=\"159\" height=\"159\" viewBox=\"0 0 130 130\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"62\" cy=\"62\" r=\"52\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.6\"/><line x1=\"62\" y1=\"62\" x2=\"62.0\" y2=\"10.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"62\" y1=\"62\" x2=\"107.0\" y2=\"88.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"62\" y1=\"62\" x2=\"17.0\" y2=\"88.0\" stroke=\"#000\" stroke-width=\"1.1\"/><text x=\"96.2\" y=\"45.7\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">2</text><text x=\"62.0\" y=\"105.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">3</text><text x=\"27.8\" y=\"45.7\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">4</text><line x1=\"62.0\" y1=\"62.0\" x2=\"80.9\" y2=\"51.1\" stroke=\"#000\" stroke-width=\"1.6\"/><polygon points=\"80.9,51.1 75.8,57.2 73.0,52.5\" fill=\"#000\"/><circle cx=\"62\" cy=\"62\" r=\"3\" fill=\"#000\"/></svg></td><td><svg width=\"159\" height=\"159\" viewBox=\"0 0 130 130\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"62\" cy=\"62\" r=\"52\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.6\"/><line x1=\"62\" y1=\"62\" x2=\"62.0\" y2=\"10.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"62\" y1=\"62\" x2=\"114.0\" y2=\"62.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"62\" y1=\"62\" x2=\"62.0\" y2=\"114.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"62\" y1=\"62\" x2=\"10.0\" y2=\"62.0\" stroke=\"#000\" stroke-width=\"1.1\"/><text x=\"89.9\" y=\"37.6\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">1</text><text x=\"89.9\" y=\"93.4\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">3</text><text x=\"34.1\" y=\"93.4\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">7</text><text x=\"34.1\" y=\"37.6\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">9</text><line x1=\"62.0\" y1=\"62.0\" x2=\"46.6\" y2=\"77.4\" stroke=\"#000\" stroke-width=\"1.6\"/><polygon points=\"46.6,77.4 49.9,70.2 53.8,74.1\" fill=\"#000\"/><circle cx=\"62\" cy=\"62\" r=\"3\" fill=\"#000\"/></svg></td></tr>\n<tr><td class=\"spl\">SPINNER M</td><td class=\"spl\">SPINNER N</td></tr></table>\n<p>Spinner M determines the digit in the tens place, and Spinner N determines the digit in the\nones place. What is the probability that the two-digit number determined by spinning each\nspinner one time is a prime number?</p>", "choices": [{"letter": "A", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">2</span></span>"}, {"letter": "B", "html": "<span class=\"frac\"><span class=\"num\">7</span><span class=\"den\">12</span></span>"}, {"letter": "C", "html": "<span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">3</span></span>"}, {"letter": "D", "html": "<span class=\"frac\"><span class=\"num\">3</span><span class=\"den\">4</span></span>"}], "answer": "B"}, {"n": 82, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"354\" height=\"287\" viewBox=\"0 0 290 235\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"10.0\" y1=\"172.0\" x2=\"275.0\" y2=\"172.0\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"10.0,172.0 17.0,168.5 17.0,175.5\" fill=\"#000\"/><polygon points=\"275.0,172.0 268.0,168.5 268.0,175.5\" fill=\"#000\"/><text x=\"6.0\" y=\"164.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"start\" font-style=\"italic\">h</text><line x1=\"95.4\" y1=\"132.2\" x2=\"32.4\" y2=\"207.2\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"32.4,207.2 35.2,199.7 39.4,203.2\" fill=\"#000\"/><line x1=\"62.0\" y1=\"172.0\" x2=\"185.0\" y2=\"25.4\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"185.0,25.4 182.3,32.9 178.1,29.4\" fill=\"#000\"/><text x=\"26.0\" y=\"216.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\" font-style=\"italic\">j</text><line x1=\"182.3\" y1=\"134.4\" x2=\"211.7\" y2=\"215.2\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"211.7,215.2 206.6,209.1 211.7,207.2\" fill=\"#000\"/><line x1=\"196.0\" y1=\"172.0\" x2=\"139.7\" y2=\"17.4\" stroke=\"#000\" stroke-width=\"1.1\"/><polygon points=\"139.7,17.4 144.9,23.5 139.7,25.4\" fill=\"#000\"/><text x=\"232.0\" y=\"218.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\" font-style=\"italic\">k</text><path d=\"M 81.3 149.0 A 30.0 30.0 0 0 0 32.0 172.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"28.0\" y=\"158.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"middle\">130&deg;</text><path d=\"M 226.0 172.0 A 30.0 30.0 0 0 0 206.3 143.8\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"232.0\" y=\"158.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"middle\">110&deg;</text><circle cx=\"155.5\" cy=\"60.6\" r=\"2.8\" fill=\"#000\"/><text x=\"167.5\" y=\"72.6\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">Q</text><path d=\"M 172.2 40.7 A 26.0 26.0 0 0 0 146.6 36.2\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"157.5\" y=\"32.6\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\" font-style=\"italic\">x&deg;</text></svg></div><p>In the figure above, lines <i>j</i> and <i>k</i> intersect at point Q, and\n<i>h</i> is a straight line. What is the value of <i>x</i>?</p>", "choices": [{"letter": "E", "html": "40"}, {"letter": "F", "html": "50"}, {"letter": "G", "html": "60"}, {"letter": "H", "html": "70"}], "answer": "G"}, {"n": 83, "type": "mc", "stem": "<p>Which statement <b>must</b> be true if <i>x</i> is a whole number greater than\nor equal to 2?</p>", "choices": [{"letter": "A", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i> &minus; 1</span></span> &lt; <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i> + 1</span></span>"}, {"letter": "B", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i></span></span> + <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i> + 1</span></span> &gt; 1"}, {"letter": "C", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i></span></span> &minus; <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i> + 1</span></span> &gt; <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i></span></span>"}, {"letter": "D", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i></span></span> &minus; <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i> + 1</span></span> &lt; <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i> + 1</span></span>"}], "answer": "D"}, {"n": 84, "type": "mc", "stem": "<p>A crate contains apples, pears, and plums. There are 18 pears in the crate. The\nprobability of randomly choosing a pear is 1 in 4, and the probability of randomly choosing an\napple is 1 in 3. How many plums are in the crate?</p>", "choices": [{"letter": "E", "html": "24"}, {"letter": "F", "html": "27"}, {"letter": "G", "html": "30"}, {"letter": "H", "html": "36"}], "answer": "G"}, {"n": 85, "type": "mc", "stem": "<p>It took Diego 2 hours 30 minutes to drive 100 kilometers. What was his average\nspeed in <b>miles per hour</b>? (Use the approximation 1 mile = 1.6 kilometers.)</p>", "choices": [{"letter": "A", "html": "25"}, {"letter": "B", "html": "40"}, {"letter": "C", "html": "62.5"}, {"letter": "D", "html": "64"}], "answer": "A"}, {"n": 86, "type": "mc", "stem": "<p>Integer <i>x</i> is evenly divisible by 4. Which expression below <b>must</b>\nalso be evenly divisible by 4?</p>", "choices": [{"letter": "E", "html": "2<i>x</i> + 2"}, {"letter": "F", "html": "4<i>x</i> &minus; 2"}, {"letter": "G", "html": "<span class=\"frac\"><span class=\"num\"><i>x</i></span><span class=\"den\">2</span></span> + 1"}, {"letter": "H", "html": "3<i>x</i> + 4"}], "answer": "H"}, {"n": 87, "type": "mc", "stem": "<p>Tom&aacute;s has a bag containing 9 red tiles, 15 blue tiles, and 6 yellow tiles.\nHe removes 5 blue tiles from the bag and does not return them. If he then removes one tile at\nrandom, what is the probability that it will <b>not</b> be red?</p>", "choices": [{"letter": "A", "html": "<span class=\"frac\"><span class=\"num\">8</span><span class=\"den\">25</span></span>"}, {"letter": "B", "html": "<span class=\"frac\"><span class=\"num\">16</span><span class=\"den\">25</span></span>"}, {"letter": "C", "html": "<span class=\"frac\"><span class=\"num\">7</span><span class=\"den\">10</span></span>"}, {"letter": "D", "html": "<span class=\"frac\"><span class=\"num\">4</span><span class=\"den\">5</span></span>"}], "answer": "B"}, {"n": 88, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"183\" height=\"183\" viewBox=\"0 0 150 150\" xmlns=\"http://www.w3.org/2000/svg\"><circle cx=\"72\" cy=\"72\" r=\"60\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.6\"/><line x1=\"72\" y1=\"72\" x2=\"72.0\" y2=\"12.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"72\" y1=\"72\" x2=\"118.9\" y2=\"34.6\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"72\" y1=\"72\" x2=\"130.5\" y2=\"85.4\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"72\" y1=\"72\" x2=\"98.0\" y2=\"126.1\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"72\" y1=\"72\" x2=\"46.0\" y2=\"126.1\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"72\" y1=\"72\" x2=\"13.5\" y2=\"85.4\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"72\" y1=\"72\" x2=\"25.1\" y2=\"34.6\" stroke=\"#000\" stroke-width=\"1.1\"/><text x=\"91.8\" y=\"34.4\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">P</text><text x=\"116.5\" y=\"65.4\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">Q</text><text x=\"107.7\" y=\"103.9\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">R</text><text x=\"72.0\" y=\"121.1\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">S</text><text x=\"36.3\" y=\"103.9\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">T</text><text x=\"27.5\" y=\"65.4\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">U</text><text x=\"52.2\" y=\"34.4\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">V</text><line x1=\"72.0\" y1=\"72.0\" x2=\"82.9\" y2=\"49.3\" stroke=\"#000\" stroke-width=\"1.6\"/><polygon points=\"82.9,49.3 82.1,57.3 77.2,54.9\" fill=\"#000\"/><circle cx=\"72\" cy=\"72\" r=\"3\" fill=\"#000\"/></svg></div>\n<p>The spinner above is divided into 7 spaces of equal size. The arrow starts on\nSpace P and moves <b>counterclockwise</b> around the circle, moving through one space each\nminute. What space will the arrow point to in 150 minutes?</p>", "choices": [{"letter": "E", "html": "Q"}, {"letter": "F", "html": "R"}, {"letter": "G", "html": "S"}, {"letter": "H", "html": "T"}], "answer": "H"}, {"n": 89, "type": "mc", "stem": "<p>Fatima is one of 8 members of a student council. If 3 members of the council are\nselected to attend a conference, how many of the possible groups of 3 members would include\nFatima?</p>", "choices": [{"letter": "A", "html": "21"}, {"letter": "B", "html": "28"}, {"letter": "C", "html": "35"}, {"letter": "D", "html": "56"}], "answer": "A"}, {"n": 90, "type": "mc", "stem": "<p>If <i>a</i> = &minus;2 and <i>b</i> = 6, what is the value of <span class=\"frac\"><span class=\"num\">4(<i>b</i> &minus; <i>a</i>) &minus; <i>b</i><sup>2</sup></span><span class=\"den\"><i>a</i><sup>3</sup> + <i>b</i></span></span>?</p>", "choices": [{"letter": "E", "html": "&minus;2"}, {"letter": "F", "html": "1"}, {"letter": "G", "html": "2"}, {"letter": "H", "html": "4"}], "answer": "G"}, {"n": 91, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"348\" height=\"183\" viewBox=\"0 0 285 150\" xmlns=\"http://www.w3.org/2000/svg\"><polygon points=\"52,122 18,36 204,36 238,122\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.3\"/><text x=\"40.0\" y=\"132.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">P</text><text x=\"6.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">Q</text><text x=\"216.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">R</text><text x=\"250.0\" y=\"132.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">S</text><path d=\"M 82.0 122.0 A 30.0 30.0 0 0 0 40.8 94.2\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"74.0\" y=\"100.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"start\" font-style=\"italic\">4x&deg;</text><path d=\"M 28.5 62.0 A 28.0 28.0 0 0 0 46.0 36.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"48.0\" y=\"60.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"start\" font-style=\"italic\">x&deg;</text></svg></div><p>In the parallelogram above, what is the measure of angle R?</p>", "choices": [{"letter": "A", "html": "36&deg;"}, {"letter": "B", "html": "45&deg;"}, {"letter": "C", "html": "72&deg;"}, {"letter": "D", "html": "144&deg;"}], "answer": "D"}, {"n": 92, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"354\" height=\"76\" viewBox=\"0 0 290 62\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"6.0\" y1=\"34.0\" x2=\"284.0\" y2=\"34.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"6.0,34.0 13.0,30.5 13.0,37.5\" fill=\"#000\"/><polygon points=\"284.0,34.0 277.0,30.5 277.0,37.5\" fill=\"#000\"/><line x1=\"20.0\" y1=\"29.0\" x2=\"20.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"20.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">&minus;10</text><line x1=\"40.8\" y1=\"29.0\" x2=\"40.8\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"61.7\" y1=\"29.0\" x2=\"61.7\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"61.7\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">&minus;6</text><line x1=\"82.5\" y1=\"29.0\" x2=\"82.5\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"103.3\" y1=\"29.0\" x2=\"103.3\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"103.3\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">&minus;2</text><line x1=\"124.2\" y1=\"29.0\" x2=\"124.2\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"145.0\" y1=\"29.0\" x2=\"145.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"145.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">2</text><line x1=\"165.8\" y1=\"29.0\" x2=\"165.8\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"186.7\" y1=\"29.0\" x2=\"186.7\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"186.7\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">6</text><line x1=\"207.5\" y1=\"29.0\" x2=\"207.5\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"228.3\" y1=\"29.0\" x2=\"228.3\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"228.3\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">10</text><line x1=\"249.2\" y1=\"29.0\" x2=\"249.2\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"270.0\" y1=\"29.0\" x2=\"270.0\" y2=\"39.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"270.0\" y=\"50.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">14</text><circle cx=\"61.7\" cy=\"34.0\" r=\"3.2\" fill=\"#000\"/><text x=\"61.7\" y=\"24.0\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">J</text><circle cx=\"270.0\" cy=\"34.0\" r=\"3.2\" fill=\"#000\"/><text x=\"270.0\" y=\"24.0\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\">K</text></svg></div><p>On the number line above, point L (not shown) is located on line segment JK so\nthat JL = <span class=\"frac\"><span class=\"num\">3</span><span class=\"den\">2</span></span> LK. What is the position of point L?</p>", "choices": [{"letter": "E", "html": "&minus;2"}, {"letter": "F", "html": "2"}, {"letter": "G", "html": "6"}, {"letter": "H", "html": "10"}], "answer": "G"}, {"n": 93, "type": "mc", "stem": "<p>Rosa and Wendell divided the profit from a fundraiser between themselves. Rosa\ngot 65&#37; of the profit. If Rosa received $900 more than Wendell, what was the total\nprofit?</p>", "choices": [{"letter": "A", "html": "$1,500"}, {"letter": "B", "html": "$1,950"}, {"letter": "C", "html": "$3,000"}, {"letter": "D", "html": "$4,500"}], "answer": "C"}, {"n": 94, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"305\" height=\"262\" viewBox=\"0 0 250 215\" xmlns=\"http://www.w3.org/2000/svg\"><path d=\"M 118.0 108.0 L 118.0 30.0 A 78.0 78.0 0 0 1 185.5 147.0 Z\" fill=\"#d9d9d9\" stroke=\"#000\" stroke-width=\"1.1\"/><circle cx=\"118\" cy=\"108\" r=\"78\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.3\"/><line x1=\"118\" y1=\"108\" x2=\"118.0\" y2=\"30.0\" stroke=\"#000\" stroke-width=\"1.1\"/><line x1=\"118\" y1=\"108\" x2=\"185.5\" y2=\"147.0\" stroke=\"#000\" stroke-width=\"1.1\"/><path d=\"M 144.0 123.0 A 30.0 30.0 0 0 0 118.0 78.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"163.6\" y=\"87.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"middle\">120&deg;</text></svg></div><p>The shaded sector of the circle shown above has an area of 27&pi; square feet.\nWhat is the <b>circumference</b> of the circle?</p>", "choices": [{"letter": "E", "html": "9&pi; ft"}, {"letter": "F", "html": "18&pi; ft"}, {"letter": "G", "html": "27&pi; ft"}, {"letter": "H", "html": "81&pi; ft"}], "answer": "F"}, {"n": 95, "type": "mc", "stem": "<p>Point A and point B are 300 miles apart. At the same time, a train leaves\npoint A traveling toward point B at a speed of 30 miles per hour, and another train leaves\npoint B traveling toward point A at a speed of 70 miles per hour. How far from point B will\nthe trains meet?</p>", "choices": [{"letter": "A", "html": "90 mi"}, {"letter": "B", "html": "150 mi"}, {"letter": "C", "html": "210 mi"}, {"letter": "D", "html": "240 mi"}], "answer": "C"}, {"n": 96, "type": "mc", "stem": "<p>A technician mixed three powders, X, Y, and Z, in a sealed jar. The amount of X\nis 4 times the amount of Y, and the amount of Y is <span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">3</span></span> the amount of Z. What is the ratio of the\namount of X to the amount of Z?</p>", "choices": [{"letter": "E", "html": "3:8"}, {"letter": "F", "html": "6:1"}, {"letter": "G", "html": "8:3"}, {"letter": "H", "html": "12:1"}], "answer": "G"}, {"n": 97, "type": "mc", "stem": "<p>Naomi has <i>n</i> comic books, and Grace has <i>g</i> comic books. If Naomi\ngives 8 comic books to Grace, Grace will then have 3 times as many comic books as Naomi. Which\nequation shows the relationship between <i>n</i> and <i>g</i>?</p>", "choices": [{"letter": "A", "html": "<i>g</i> &minus; 8 = 3(<i>n</i> + 8)"}, {"letter": "B", "html": "<i>g</i> + 8 = 3<i>n</i> &minus; 8"}, {"letter": "C", "html": "3(<i>g</i> + 8) = <i>n</i> &minus; 8"}, {"letter": "D", "html": "<i>g</i> + 8 = 3(<i>n</i> &minus; 8)"}], "answer": "D"}, {"n": 98, "type": "mc", "stem": "<p>On Monday, Theo read 25&#37; of his entire book. On Tuesday, he read <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">3</span></span> of what\nwas left. On Wednesday, he read <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">4</span></span> of what was left after Tuesday. In lowest terms, what\nfraction of the book is left for him to read?</p>", "choices": [{"letter": "E", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">4</span></span>"}, {"letter": "F", "html": "<span class=\"frac\"><span class=\"num\">3</span><span class=\"den\">8</span></span>"}, {"letter": "G", "html": "<span class=\"frac\"><span class=\"num\">5</span><span class=\"den\">12</span></span>"}, {"letter": "H", "html": "<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">2</span></span>"}], "answer": "F"}, {"n": 99, "type": "mc", "stem": "<div class=\"disp\">{1, 2, 3, 4, 5, . . . , 298, 299, 300}</div>\n<p>How many members of the set shown above are multiples of 4 but <b>not</b> multiples\nof 6?</p>", "choices": [{"letter": "A", "html": "25"}, {"letter": "B", "html": "50"}, {"letter": "C", "html": "60"}, {"letter": "D", "html": "75"}], "answer": "B"}, {"n": 100, "type": "mc", "stem": "<p>Elena jogs 9 kilometers in 1 hour 15 minutes. At that rate, how many\n<b>meters</b> does she jog per minute?</p>", "choices": [{"letter": "E", "html": "12"}, {"letter": "F", "html": "72"}, {"letter": "G", "html": "120"}, {"letter": "H", "html": "1,200"}], "answer": "G"}, {"n": 101, "type": "mc", "stem": "<p>For what value of <i>x</i> is the equation</p>\n<div class=\"disp\"><span class=\"frac\"><span class=\"num\"><i>x</i></span><span class=\"den\">4</span></span> &minus; 3 = 2(5 &minus; 3<i>x</i>) &minus; 1</div><p>true?</p>", "choices": [{"letter": "A", "html": "<span class=\"frac\"><span class=\"num\">12</span><span class=\"den\">25</span></span>"}, {"letter": "B", "html": "<span class=\"frac\"><span class=\"num\">24</span><span class=\"den\">25</span></span>"}, {"letter": "C", "html": "<span class=\"frac\"><span class=\"num\">48</span><span class=\"den\">25</span></span>"}, {"letter": "D", "html": "<span class=\"frac\"><span class=\"num\">48</span><span class=\"den\">23</span></span>"}], "answer": "C"}, {"n": 102, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"354\" height=\"220\" viewBox=\"0 0 290 180\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"34\" y=\"40\" width=\"212\" height=\"118\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\"/><line x1=\"140.0\" y1=\"40.0\" x2=\"246.0\" y2=\"114.2\" stroke=\"#000\" stroke-width=\"1.2\"/><circle cx=\"140.0\" cy=\"40.0\" r=\"2.8\" fill=\"#000\"/><circle cx=\"246.0\" cy=\"114.2\" r=\"2.8\" fill=\"#000\"/><text x=\"138.0\" y=\"32.0\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">R</text><text x=\"258.0\" y=\"118.2\" font-family=\"Helvetica\" font-size=\"10\" text-anchor=\"middle\">S</text><path d=\"M 106.0 40.0 A 34.0 34.0 0 0 0 167.9 59.5\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"125.0\" y=\"90.7\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"middle\">145&deg;</text><path d=\"M 246.0 84.2 A 30.0 30.0 0 0 0 221.4 97.0\" fill=\"none\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"225.7\" y=\"78.2\" font-family=\"Helvetica\" font-size=\"9.5\" text-anchor=\"middle\" font-style=\"italic\">y&deg;</text></svg></div><p>The diagram above shows line segment RS intersecting a rectangle. What is the\nmeasure of angle <i>y</i>?</p>", "choices": [{"letter": "E", "html": "35&deg;"}, {"letter": "F", "html": "45&deg;"}, {"letter": "G", "html": "55&deg;"}, {"letter": "H", "html": "125&deg;"}], "answer": "G"}, {"n": 103, "type": "mc", "stem": "<div class=\"tbl-title\">BOOK REPORT LENGTH</div>\n<table class=\"data\"><tr><th>Number of Words</th><th>Number of Reports</th></tr>\n<tr><td>&lt;100</td><td>5</td></tr>\n<tr><td>100&ndash;250</td><td>7</td></tr>\n<tr><td>251&ndash;500</td><td>12</td></tr>\n<tr><td>&gt;500</td><td>6</td></tr></table>\n<p>All 450 students in Grade 8 at Rivera Middle School are assigned to write a book\nreport on the same novel. A teacher records the number of words in a random sample of the\nreports, as shown in the table above. Based on this sample, how many students in the entire\ngrade would be expected to write reports with <b>at most</b> 500 words?</p>", "choices": [{"letter": "A", "html": "90"}, {"letter": "B", "html": "360"}, {"letter": "C", "html": "400"}, {"letter": "D", "html": "450"}], "answer": "B"}, {"n": 104, "type": "mc", "stem": "<p>Which percentage is closest in value to 0.00098?</p>", "choices": [{"letter": "E", "html": "0.01&#37;"}, {"letter": "F", "html": "0.1&#37;"}, {"letter": "G", "html": "1&#37;"}, {"letter": "H", "html": "10&#37;"}], "answer": "F"}, {"n": 105, "type": "mc", "stem": "<p>A warehouse supervisor recorded the weights, in pounds, of the last 15 crates the\nwarehouse shipped. The supervisor displayed the distribution of the weights in a box plot with\nthe five-number summary shown below:</p>\n<ul><li>minimum: 12</li><li>first quartile: 18</li><li>median: 30</li>\n<li>third quartile: 42</li><li>maximum: 96</li></ul>\n<p>Which statement about the distribution of weights is supported by the box plot\nthe supervisor created?</p>", "choices": [{"letter": "A", "html": "The interquartile range of the data is 30."}, {"letter": "B", "html": "About half the crates weigh less than 18 pounds."}, {"letter": "C", "html": "The mean weight of the crates is 30 pounds."}, {"letter": "D", "html": "About 25&#37; of the crates weigh between 30 and 42 pounds."}], "answer": "D"}, {"n": 106, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"354\" height=\"226\" viewBox=\"0 0 290 185\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"30\" y=\"18\" width=\"234\" height=\"126\" fill=\"none\" stroke=\"#000\" stroke-width=\"1.2\"/><rect x=\"66\" y=\"42\" width=\"141\" height=\"94\" fill=\"#d9d9d9\" stroke=\"#000\" stroke-width=\"1.2\"/><line x1=\"52\" y1=\"42\" x2=\"52\" y2=\"136\" stroke=\"#000\" stroke-width=\"0.9\"/><line x1=\"48\" y1=\"42\" x2=\"56\" y2=\"42\" stroke=\"#000\" stroke-width=\"0.9\"/><line x1=\"48\" y1=\"136\" x2=\"56\" y2=\"136\" stroke=\"#000\" stroke-width=\"0.9\"/><text x=\"45.0\" y=\"92.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"end\">6 ft</text><line x1=\"30\" y1=\"162\" x2=\"264\" y2=\"162\" stroke=\"#000\" stroke-width=\"0.9\"/><line x1=\"30\" y1=\"158\" x2=\"30\" y2=\"166\" stroke=\"#000\" stroke-width=\"0.9\"/><line x1=\"264\" y1=\"158\" x2=\"264\" y2=\"166\" stroke=\"#000\" stroke-width=\"0.9\"/><rect x=\"127\" y=\"155\" width=\"40\" height=\"14\" fill=\"#fff\"/><text x=\"147.0\" y=\"166.0\" font-family=\"Helvetica\" font-size=\"9\" text-anchor=\"middle\">12 ft</text></svg></div><p>In the figure above, the shaded rectangle is similar to the outer rectangle. The\nlength of the outer rectangle is 12 feet, and the perimeter of the outer rectangle is 40 feet.\nIf the width of the shaded rectangle is 6 feet, what is the area of the shaded rectangle?</p>", "choices": [{"letter": "E", "html": "27 sq ft"}, {"letter": "F", "html": "48 sq ft"}, {"letter": "G", "html": "54 sq ft"}, {"letter": "H", "html": "72 sq ft"}], "answer": "G"}, {"n": 107, "type": "mc", "stem": "<p>A rectangular concrete walkway is 24 feet long, 15 feet wide, and 8 inches thick.\nWhat is the volume of the concrete?</p>", "choices": [{"letter": "A", "html": "30 cu ft"}, {"letter": "B", "html": "160 cu ft"}, {"letter": "C", "html": "240 cu ft"}, {"letter": "D", "html": "2,880 cu ft"}], "answer": "C"}, {"n": 108, "type": "mc", "stem": "<p>Adam can clean a room in 3 hours. If his sister Maria helps him, together they\ncan clean the same room in 2&thinsp;<span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">5</span></span> hours. How long would it take Maria to clean the room\nalone?</p>", "choices": [{"letter": "E", "html": "4 hours"}, {"letter": "F", "html": "6 hours"}, {"letter": "G", "html": "8 hours"}, {"letter": "H", "html": "12 hours"}], "answer": "H"}, {"n": 109, "type": "mc", "stem": "<p>Omar and Leila each ran 12 laps around a track. They started at the same time and\nplace. If Omar ran 1.25 times as fast as Leila, how many laps did Leila have left to finish\nwhen Omar finished his 12th lap?</p>", "choices": [{"letter": "A", "html": "2&thinsp;<span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">5</span></span>"}, {"letter": "B", "html": "2&thinsp;<span class=\"frac\"><span class=\"num\">1</span><span class=\"den\">2</span></span>"}, {"letter": "C", "html": "3"}, {"letter": "D", "html": "4&thinsp;<span class=\"frac\"><span class=\"num\">4</span><span class=\"den\">5</span></span>"}], "answer": "A"}, {"n": 110, "type": "mc", "stem": "<p>At Northfield College, students are randomly assigned to one of 15 residence\nhalls and one of 8 dining halls. Talia likes 6 of the residence halls and 3 of the dining halls.\nWhat is the probability that she is assigned to a residence hall she likes and a dining hall she\ndoes <b>not</b> like?</p>", "choices": [{"letter": "E", "html": "15&#37;"}, {"letter": "F", "html": "25&#37;"}, {"letter": "G", "html": "40&#37;"}, {"letter": "H", "html": "62.5&#37;"}], "answer": "F"}, {"n": 111, "type": "mc", "stem": "<p>A freight train travels 3,000 miles from Seattle to Atlanta. The train covers the\nfirst 375 miles in 6 hours. If the train continues to travel at this rate, how many <b>more</b>\nhours will it take to reach Atlanta?</p>", "choices": [{"letter": "A", "html": "40"}, {"letter": "B", "html": "42"}, {"letter": "C", "html": "46"}, {"letter": "D", "html": "48"}], "answer": "B"}, {"n": 112, "type": "mc", "stem": "<p>What is the <b>least</b> of five consecutive even integers whose sum is 130?</p>", "choices": [{"letter": "E", "html": "20"}, {"letter": "F", "html": "22"}, {"letter": "G", "html": "24"}, {"letter": "H", "html": "26"}], "answer": "F"}, {"n": 113, "type": "mc", "stem": "<div class=\"fig\"><svg width=\"305\" height=\"56\" viewBox=\"0 0 250 46\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"4.0\" y1=\"22.0\" x2=\"246.0\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"4.0,22.0 11.0,18.5 11.0,25.5\" fill=\"#000\"/><polygon points=\"246.0,22.0 239.0,18.5 239.0,25.5\" fill=\"#000\"/><line x1=\"24.0\" y1=\"17.0\" x2=\"24.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"24.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">0</text><line x1=\"57.7\" y1=\"17.0\" x2=\"57.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"91.3\" y1=\"17.0\" x2=\"91.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"91.3\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">1</text><line x1=\"125.0\" y1=\"17.0\" x2=\"125.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"158.7\" y1=\"17.0\" x2=\"158.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"158.7\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">2</text><line x1=\"192.3\" y1=\"17.0\" x2=\"192.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"226.0\" y1=\"17.0\" x2=\"226.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"226.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">3</text><line x1=\"57.7\" y1=\"22.0\" x2=\"158.7\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"3.4\"/><circle cx=\"57.7\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/><circle cx=\"158.7\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/></svg></div><p>If all possible values of <i>x</i> are indicated by the shaded part of the number\nline above, which number line best shows all possible values of <span class=\"frac\"><span class=\"num\">1</span><span class=\"den\"><i>x</i></span></span>?</p>", "choices": [{"letter": "A", "html": "<svg width=\"305\" height=\"56\" viewBox=\"0 0 250 46\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"4.0\" y1=\"22.0\" x2=\"246.0\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"4.0,22.0 11.0,18.5 11.0,25.5\" fill=\"#000\"/><polygon points=\"246.0,22.0 239.0,18.5 239.0,25.5\" fill=\"#000\"/><line x1=\"24.0\" y1=\"17.0\" x2=\"24.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"24.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">0</text><line x1=\"57.7\" y1=\"17.0\" x2=\"57.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"91.3\" y1=\"17.0\" x2=\"91.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"91.3\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">1</text><line x1=\"125.0\" y1=\"17.0\" x2=\"125.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"158.7\" y1=\"17.0\" x2=\"158.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"158.7\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">2</text><line x1=\"192.3\" y1=\"17.0\" x2=\"192.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"226.0\" y1=\"17.0\" x2=\"226.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"226.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">3</text><line x1=\"24.0\" y1=\"22.0\" x2=\"57.7\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"3.4\"/><circle cx=\"24.0\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/><circle cx=\"57.7\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/></svg>"}, {"letter": "B", "html": "<svg width=\"305\" height=\"56\" viewBox=\"0 0 250 46\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"4.0\" y1=\"22.0\" x2=\"246.0\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"4.0,22.0 11.0,18.5 11.0,25.5\" fill=\"#000\"/><polygon points=\"246.0,22.0 239.0,18.5 239.0,25.5\" fill=\"#000\"/><line x1=\"24.0\" y1=\"17.0\" x2=\"24.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"24.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">0</text><line x1=\"57.7\" y1=\"17.0\" x2=\"57.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"91.3\" y1=\"17.0\" x2=\"91.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"91.3\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">1</text><line x1=\"125.0\" y1=\"17.0\" x2=\"125.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"158.7\" y1=\"17.0\" x2=\"158.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"158.7\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">2</text><line x1=\"192.3\" y1=\"17.0\" x2=\"192.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"226.0\" y1=\"17.0\" x2=\"226.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"226.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">3</text><line x1=\"57.7\" y1=\"22.0\" x2=\"91.3\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"3.4\"/><circle cx=\"57.7\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/><circle cx=\"91.3\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/></svg>"}, {"letter": "C", "html": "<svg width=\"305\" height=\"56\" viewBox=\"0 0 250 46\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"4.0\" y1=\"22.0\" x2=\"246.0\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"4.0,22.0 11.0,18.5 11.0,25.5\" fill=\"#000\"/><polygon points=\"246.0,22.0 239.0,18.5 239.0,25.5\" fill=\"#000\"/><line x1=\"24.0\" y1=\"17.0\" x2=\"24.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"24.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">0</text><line x1=\"57.7\" y1=\"17.0\" x2=\"57.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"91.3\" y1=\"17.0\" x2=\"91.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"91.3\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">1</text><line x1=\"125.0\" y1=\"17.0\" x2=\"125.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"158.7\" y1=\"17.0\" x2=\"158.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"158.7\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">2</text><line x1=\"192.3\" y1=\"17.0\" x2=\"192.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"226.0\" y1=\"17.0\" x2=\"226.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"226.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">3</text><line x1=\"91.3\" y1=\"22.0\" x2=\"158.7\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"3.4\"/><circle cx=\"91.3\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/><circle cx=\"158.7\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/></svg>"}, {"letter": "D", "html": "<svg width=\"305\" height=\"56\" viewBox=\"0 0 250 46\" xmlns=\"http://www.w3.org/2000/svg\"><line x1=\"4.0\" y1=\"22.0\" x2=\"246.0\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"1.2\"/><polygon points=\"4.0,22.0 11.0,18.5 11.0,25.5\" fill=\"#000\"/><polygon points=\"246.0,22.0 239.0,18.5 239.0,25.5\" fill=\"#000\"/><line x1=\"24.0\" y1=\"17.0\" x2=\"24.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"24.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">0</text><line x1=\"57.7\" y1=\"17.0\" x2=\"57.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"91.3\" y1=\"17.0\" x2=\"91.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"91.3\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">1</text><line x1=\"125.0\" y1=\"17.0\" x2=\"125.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"158.7\" y1=\"17.0\" x2=\"158.7\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"158.7\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">2</text><line x1=\"192.3\" y1=\"17.0\" x2=\"192.3\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><line x1=\"226.0\" y1=\"17.0\" x2=\"226.0\" y2=\"27.0\" stroke=\"#000\" stroke-width=\"1\"/><text x=\"226.0\" y=\"38.0\" font-family=\"Helvetica\" font-size=\"8.5\" text-anchor=\"middle\">3</text><line x1=\"57.7\" y1=\"22.0\" x2=\"158.7\" y2=\"22.0\" stroke=\"#000\" stroke-width=\"3.4\"/><circle cx=\"57.7\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/><circle cx=\"158.7\" cy=\"22.0\" r=\"3.6\" fill=\"#000\"/></svg>"}], "answer": "D"}, {"n": 114, "type": "mc", "stem": "<p>Devi selects a bead from a jar and then returns it to the jar. When she does this\n3 times, the probability of choosing a red bead all 3 times is <span class=\"frac\"><span class=\"num\">8</span><span class=\"den\">125</span></span>. Based on this information,\nwhat is the probability of Devi choosing a red bead the <b>first</b> time she selects a\nbead?</p>", "choices": [{"letter": "E", "html": "<span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">5</span></span>"}, {"letter": "F", "html": "<span class=\"frac\"><span class=\"num\">4</span><span class=\"den\">25</span></span>"}, {"letter": "G", "html": "<span class=\"frac\"><span class=\"num\">8</span><span class=\"den\">375</span></span>"}, {"letter": "H", "html": "<span class=\"frac\"><span class=\"num\">2</span><span class=\"den\">15</span></span>"}], "answer": "E"}];
+var TOTAL = DATA.length;
+var STORE = "shsat_formD_math_v2";
+
+var idx = 0, answers = {}, pending = null, elapsed = 0;
+var mode = "start", reviewIdx = 0, ticker = null;
+
+var app = document.getElementById("app");
+var bar = document.getElementById("bar");
+var track = document.getElementById("track");
+
+/* ---------- helpers ---------- */
+function esc(s){ return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;"); }
+
+function fmt(sec){
+  if (sec < 0) sec = 0;
+  var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60), s = sec%60;
+  return h + ":" + (m<10?"0":"") + m + ":" + (s<10?"0":"") + s;
+}
+function norm(v){
+  return String(v == null ? "" : v).trim()
+    .replace(/&minus;/g, "-").replace(/\u2212/g, "-")
+    .replace(/[$,\s]/g, "");
+}
+function sameAnswer(a, b){
+  var x = norm(a), y = norm(b);
+  if (!x) return false;
+  if (x === y) return true;
+  var fx = parseFloat(x), fy = parseFloat(y);
+  return !isNaN(fx) && !isNaN(fy) && Math.abs(fx - fy) < 1e-9;
+}
+function answeredCount(){
+  var c = 0;
+  for (var k in answers){ if (norm(answers[k])) c++; }
+  return c;
+}
+
+/* ---------- in-page dialog ---------- */
+function ask(heading, message, yesLabel, onYes){
+  var m = document.getElementById("modal");
+  document.getElementById("modal-h").textContent = heading;
+  document.getElementById("modal-p").textContent = message;
+  var yes = document.getElementById("modal-yes");
+  var no  = document.getElementById("modal-no");
+  yes.textContent = yesLabel;
+  m.hidden = false;
+  yes.focus();
+  function close(){ m.hidden = true; yes.onclick = null; no.onclick = null; }
+  yes.onclick = function(){ close(); onYes(); };
+  no.onclick = close;
+}
+
+/* ---------- printing ---------- */
+function printSheet(){
+  var name = (document.getElementById("student") || {}).value || "";
+  var slot = document.getElementById("phname");
+  if (slot) slot.textContent = name ? name : "\u2014";
+  try { window.print(); } catch (e) {}
+}
+
+/* ---------- persistence (degrades quietly) ---------- */
+function save(){
+  try{
+    localStorage.setItem(STORE, JSON.stringify({
+      idx: idx, answers: answers, elapsed: elapsed, mode: mode
+    }));
+  }catch(e){}
+}
+function load(){
+  try{
+    var raw = localStorage.getItem(STORE);
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+function wipe(){ try{ localStorage.removeItem(STORE); }catch(e){} }
+
+/* ---------- timer ---------- */
+function tick(){
+  elapsed++;
+  if (elapsed % 15 === 0) save();
+}
+function startTicker(){
+  if (ticker) clearInterval(ticker);
+  ticker = setInterval(tick, 1000);
+}
+function stopTicker(){ if (ticker){ clearInterval(ticker); ticker = null; } }
+
+function paintChrome(){
+  var showing = (mode === "test");
+  bar.hidden = !showing;
+  track.hidden = !showing;
+  if (!showing) return;
+  document.getElementById("count").textContent = answeredCount() + " of " + TOTAL + " answered";
+  document.getElementById("trackbar").style.width = ((idx / TOTAL) * 100) + "%";
+}
+
+/* ---------- screens ---------- */
+function screenStart(){
+  var saved = load();
+  var canResume = saved && saved.mode === "test" && saved.idx > 0 && saved.idx < TOTAL;
+  return '' +
+  '<div class="card">' +
+    '<h1>Mathematics Section &mdash; Form D</h1>' +
+    '<p class="lede">57 questions, untimed. This mirrors the computer-adaptive ' +
+      'format: questions appear in a fixed order and you cannot return to a question ' +
+      'once you move past it.</p>' +
+    '<ul class="rules">' +
+      '<li><b>Questions 58&ndash;62</b><span>Grid-in. Type your numerical answer &mdash; ' +
+        'no answer choices are given.</span></li>' +
+      '<li><b>Questions 63&ndash;114</b><span>Multiple choice. Odd-numbered questions use ' +
+        'choices A&ndash;D, even-numbered use E&ndash;H.</span></li>' +
+      '<li><b>Navigation</b><span>Use the arrow to move to the next question. There is ' +
+        'no back button during the test.</span></li>' +
+      '<li><b>Scoring</b><span>No feedback appears while you test. Your answer sheet is ' +
+        'available at the end.</span></li>' +
+      '<li><b>Timing</b><span>No time limit. Work at your own pace; your total time is ' +
+        'noted on the answer sheet.</span></li>' +
+    '</ul>' +
+    '<div class="actions">' +
+      '<div class="note">Scratch paper and a pencil are allowed. Calculators are not.</div>' +
+      '<div class="btns">' +
+        (canResume ? '<button class="btn btn-ghost" id="resume">Resume at question ' +
+           DATA[saved.idx].n + '</button>' : '') +
+        '<button class="btn btn-primary" id="begin">Begin test</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function screenQuestion(){
+  var q = DATA[idx];
+  var isLast = (idx === TOTAL - 1);
+  var body;
+  if (q.type === "grid"){
+    body = '<div class="grid-in">' +
+             '<label for="gridbox">Your answer</label>' +
+             '<input id="gridbox" type="text" inputmode="text" autocomplete="off" ' +
+                'spellcheck="false" value="' + esc(pending == null ? "" : pending) + '">' +
+             '<div class="hint">Numbers only. Use a minus sign for a negative answer ' +
+               'and a decimal point if needed.</div>' +
+           '</div>';
+  } else {
+    var rows = "";
+    for (var i = 0; i < q.choices.length; i++){
+      var c = q.choices[i];
+      rows += '<button class="choice' + (pending === c.letter ? " on" : "") +
+              '" data-letter="' + c.letter + '" type="button">' +
+              '<span class="ltr">' + c.letter + '</span>' +
+              '<span class="ct">' + c.html + '</span></button>';
+    }
+    body = '<div class="choices" role="group" aria-label="Answer choices">' + rows + '</div>';
+  }
+  return '' +
+  '<div class="card">' +
+    '<div class="eyebrow">' +
+      '<span class="qnum">Question ' + q.n + ' &middot; ' + (idx + 1) + ' of ' + TOTAL + '</span>' +
+      (q.type === "grid" ? '<span class="badge">Grid-in</span>' : '') +
+    '</div>' +
+    '<div class="stem">' + q.stem + '</div>' +
+    body +
+    '<div class="actions">' +
+      '<div class="note">' + (isLast
+        ? 'Last question. The arrow submits your test.'
+        : 'Once you move on, this question closes.') + '</div>' +
+      '<div class="btns">' +
+        '<button class="arrow' + (isLast ? " finish" : "") + '" id="next" ' +
+          'aria-label="' + (isLast ? "Finish test" : "Next question") + '" ' +
+          'title="' + (isLast ? "Finish test" : "Next question") + '">' +
+          (isLast ? "&#10003;" : "&rarr;") + '</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function sheetRows(withKey){
+  var out = "";
+  for (var i = 0; i < TOTAL; i++){
+    var q = DATA[i], a = answers[q.n], has = !!norm(a);
+    var yours = has ? esc(a) : "&mdash;";
+    var cls = has ? "you" : "you blank";
+    if (withKey){
+      var ok = sameAnswer(a, q.answer);
+      out += '<tr><td class="q">' + q.n + '</td>' +
+             '<td class="' + (has ? (ok ? "right" : "wrong") : "you blank") + '">' + yours + '</td>' +
+             '<td>' + esc(q.answer) + '</td>' +
+             '<td>' + (ok ? '<span class="right">correct</span>'
+                          : '<span class="wrong">' + (has ? "incorrect" : "blank") + '</span>') +
+             '</td></tr>';
+    } else {
+      out += '<tr><td class="q">' + q.n + '</td><td class="' + cls + '">' + yours + '</td></tr>';
+    }
+  }
+  return out;
+}
+
+function printHead(label){
+  var d = new Date();
+  var date = d.toLocaleDateString(undefined, {year:"numeric", month:"long", day:"numeric"});
+  return '<div class="printhead">' +
+    '<div class="ph-title">SHSAT Practice &mdash; Mathematics &middot; Form D</div>' +
+    '<div class="ph-meta">' + label + ' &nbsp;&middot;&nbsp; Name: <span id="phname">' +
+      '&mdash;</span> &nbsp;&middot;&nbsp; ' + date + '</div></div>';
+}
+
+function sheetChunks(){
+  var per = Math.ceil(TOTAL / 3), out = "";
+  for (var c = 0; c < 3; c++){
+    var rows = "";
+    for (var i = c * per; i < Math.min((c + 1) * per, TOTAL); i++){
+      var q = DATA[i], a = answers[q.n], has = !!norm(a);
+      rows += '<tr><td class="q">' + q.n + '</td><td class="you' +
+              (has ? '' : ' blank') + '">' + (has ? esc(a) : "&mdash;") + '</td></tr>';
+    }
+    if (rows) out += '<table class="sheet"><thead><tr><th>Q</th><th>Your answer</th>' +
+                     '</tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+  return '<div class="sheetgrid">' + out + '</div>';
+}
+
+function screenResults(){
+  var used = elapsed;
+  return '' +
+  '<div class="card">' +
+    printHead("Answer sheet") +
+    '<h1 class="noprint">Test complete</h1>' +
+    '<p class="lede noprint">Your answer sheet is below. Nothing has been graded yet.</p>' +
+    '<div class="namefield noprint"><label for="student">Student name</label>' +
+      '<input id="student" type="text" autocomplete="off" placeholder="Optional, prints on the sheet"></div>' +
+    '<div class="stats">' +
+      '<div class="stat"><div class="k">Answered</div><div class="v">' +
+         answeredCount() + ' / ' + TOTAL + '</div></div>' +
+      '<div class="stat"><div class="k">Total time</div><div class="v">' + fmt(used) + '</div></div>' +
+    '</div>' +
+    '<h2>Answer sheet</h2>' +
+    sheetChunks() +
+    '<div class="actions noprint">' +
+      '<div class="note">Blank questions are marked in red.' +
+        '<div class="tip">If the print dialog does not open, download this file and open ' +
+        'it in your browser, then choose <b>Save as PDF</b> as the destination.</div></div>' +
+      '<div class="btns">' +
+        '<button class="btn btn-ghost" id="restart">Start over</button>' +
+        '<button class="btn btn-ghost" id="score">Score and review</button>' +
+        '<button class="btn btn-primary" id="print">Save as PDF / Print</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function screenScore(){
+  var right = 0;
+  for (var i = 0; i < TOTAL; i++){
+    if (sameAnswer(answers[DATA[i].n], DATA[i].answer)) right++;
+  }
+  var pct = Math.round((right / TOTAL) * 100);
+  return '' +
+  '<div class="card">' +
+    printHead("Scored answer sheet") +
+    '<h1 class="noprint">Score</h1>' +
+    '<div class="stats">' +
+      '<div class="stat"><div class="k">Raw score</div><div class="v">' + right + ' / ' + TOTAL + '</div></div>' +
+      '<div class="stat"><div class="k">Percent</div><div class="v">' + pct + '%</div></div>' +
+      '<div class="stat"><div class="k">Blank</div><div class="v">' + (TOTAL - answeredCount()) + '</div></div>' +
+    '</div>' +
+    '<h2>Question by question</h2>' +
+    '<table class="sheet"><thead><tr><th>Q</th><th>Yours</th><th>Key</th><th>Result</th></tr></thead>' +
+      '<tbody>' + sheetRows(true) + '</tbody></table>' +
+    '<div class="actions noprint">' +
+      '<div class="note">Walk through every question with the correct answer marked.</div>' +
+      '<div class="btns">' +
+        '<button class="btn btn-ghost" id="print">Save as PDF / Print</button>' +
+        '<button class="btn btn-primary" id="walk">Review questions</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+function screenReview(){
+  var q = DATA[reviewIdx], a = answers[q.n], ok = sameAnswer(a, q.answer);
+  var body;
+  if (q.type === "grid"){
+    body = '<div class="grid-in"><label>Your answer</label>' +
+           '<div style="font-size:22px;font-weight:600">' +
+             (norm(a) ? esc(a) : '<span class="blank">left blank</span>') + '</div></div>';
+  } else {
+    var rows = "";
+    for (var i = 0; i < q.choices.length; i++){
+      var c = q.choices[i], on = (a === c.letter), key = (q.answer === c.letter);
+      var tag = key ? ' &nbsp;<span class="right">&#10003; correct</span>'
+                    : (on ? ' &nbsp;<span class="wrong">your answer</span>' : '');
+      rows += '<div class="choice' + (key || on ? " on" : "") + '" style="cursor:default;' +
+              (key ? "border-color:#15803d;background:#f2f8f4" :
+                    (on ? "border-color:#b42318;background:#fdf3f2" : "")) + '">' +
+              '<span class="ltr"' + (key ? ' style="background:#15803d;border-color:#15803d;color:#fff"' :
+                                     (on ? ' style="background:#b42318;border-color:#b42318;color:#fff"' : '')) +
+              '>' + c.letter + '</span><span class="ct">' + c.html + tag + '</span></div>';
+    }
+    body = '<div class="choices">' + rows + '</div>';
+  }
+  var note = q.type === "grid"
+    ? '<div class="correct-note">Correct answer: <b>' + esc(q.answer) + '</b></div>' : '';
+  return '' +
+  '<div class="card">' +
+    '<div class="rev-head">' +
+      '<span class="qnum">Question ' + q.n + ' &middot; ' + (reviewIdx + 1) + ' of ' + TOTAL + '</span>' +
+      '<span class="verdict ' + (ok ? "right" : "wrong") + '">' +
+        (ok ? "Correct" : (norm(a) ? "Incorrect" : "Blank")) + '</span>' +
+    '</div>' +
+    '<div class="stem">' + q.stem + '</div>' + body + note +
+    '<div class="actions">' +
+      '<div class="note">Review mode &mdash; you can move in both directions here.</div>' +
+      '<div class="btns">' +
+        '<button class="btn btn-ghost" id="rprev"' + (reviewIdx === 0 ? " disabled" : "") + '>Previous</button>' +
+        '<button class="btn btn-ghost" id="rsheet">Back to score</button>' +
+        '<button class="btn btn-primary" id="rnext"' +
+          (reviewIdx === TOTAL - 1 ? " disabled" : "") + '>Next</button>' +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+/* ---------- single render + wiring ---------- */
+function render(){
+  if (mode === "start")        app.innerHTML = screenStart();
+  else if (mode === "test")    app.innerHTML = screenQuestion();
+  else if (mode === "results") app.innerHTML = screenResults();
+  else if (mode === "score")   app.innerHTML = screenScore();
+  else                         app.innerHTML = screenReview();
+  paintChrome();
+  wire();
+  window.scrollTo(0, 0);
+}
+
+function wire(){
+  var byId = function(id){ return document.getElementById(id); };
+  var begin = byId("begin"), resume = byId("resume");
+  if (begin) begin.onclick = function(){ beginTest(false); };
+  if (resume) resume.onclick = function(){ beginTest(true); };
+
+  var boxes = app.querySelectorAll(".choice[data-letter]");
+  for (var i = 0; i < boxes.length; i++){
+    boxes[i].onclick = function(){
+      pending = this.getAttribute("data-letter");
+      render();
+    };
+  }
+  var box = byId("gridbox");
+  if (box){
+    box.oninput = function(){ pending = this.value; };
+    box.onkeydown = function(e){ if (e.key === "Enter"){ e.preventDefault(); advance(); } };
+    box.focus();
+  }
+  var next = byId("next"); if (next) next.onclick = advance;
+
+  var print = byId("print"); if (print) print.onclick = printSheet;
+  var student = byId("student");
+  if (student) student.oninput = function(){
+    var slot = byId("phname");
+    if (slot) slot.textContent = this.value ? this.value : "\u2014";
+  };
+  var score = byId("score"); if (score) score.onclick = function(){ mode = "score"; render(); };
+  var walk  = byId("walk");  if (walk)  walk.onclick = function(){ reviewIdx = 0; mode = "review"; render(); };
+  var sheet = byId("rsheet");if (sheet) sheet.onclick = function(){ mode = "score"; render(); };
+  var rprev = byId("rprev"); if (rprev) rprev.onclick = function(){ if (reviewIdx > 0){ reviewIdx--; render(); } };
+  var rnext = byId("rnext"); if (rnext) rnext.onclick = function(){ if (reviewIdx < TOTAL - 1){ reviewIdx++; render(); } };
+  var restart = byId("restart");
+  if (restart) restart.onclick = function(){
+    ask("Start over?", "This clears every answer and returns you to question 58.",
+        "Start over", function(){
+      wipe(); idx = 0; answers = {}; pending = null; elapsed = 0;
+      mode = "start"; render();
+    });
+  };
+}
+
+function beginTest(resume){
+  var saved = resume ? load() : null;
+  if (saved){
+    idx = saved.idx || 0;
+    answers = saved.answers || {};
+    elapsed = typeof saved.elapsed === "number" ? saved.elapsed : 0;
+  } else {
+    wipe(); idx = 0; answers = {}; elapsed = 0;
+  }
+  pending = answers[DATA[idx].n] != null ? answers[DATA[idx].n] : null;
+  mode = "test";
+  startTicker();
+  render();
+}
+
+function advance(){
+  var q = DATA[idx];
+  if (pending != null && norm(pending)) answers[q.n] = pending;
+  if (idx === TOTAL - 1){
+    ask("Finish the test?", "You will see your full answer sheet. You cannot return to the questions.",
+        "Finish test", finish);
+    return;
+  }
+  idx++;
+  pending = answers[DATA[idx].n] != null ? answers[DATA[idx].n] : null;
+  save();
+  render();
+}
+
+function finish(){
+  stopTicker();
+  mode = "results";
+  save();
+  render();
+}
+
+document.addEventListener("keydown", function(e){
+  if (mode !== "test") return;
+  var q = DATA[idx];
+  if (q.type === "mc"){
+    var k = e.key.toUpperCase();
+    for (var i = 0; i < q.choices.length; i++){
+      if (q.choices[i].letter === k){ pending = k; render(); return; }
+    }
+    if (e.key === "Enter"){ advance(); }
+  }
+});
+
+render();
+})();
+</script>
+</body>
+</html>
